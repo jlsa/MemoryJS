@@ -5,6 +5,9 @@ function Game(settings) {
   this.init();
   this.firstCard;
   this.secondCard;
+  this.startTime;
+  this.endTime;
+  this.lastClickTime;
 }
 
 Game.prototype.newGame = function(settings) {
@@ -35,23 +38,60 @@ Game.prototype.init = function() {
   }
 
   this.update();
-  this.render();
 };
 
-Game.prototype.start = function() {
-
-};
+Game.prototype.addCard = function(card) {
+  // console.log('adding card');
+  if (this.firstCard == null) {
+    this.firstCard = card;
+    console.log('added first');
+    card.setState('active');
+    card.lock();
+  }
+  if (this.firstCard != null && this.secondCard == null && !card.equals(this.firstCard)) {
+    this.secondCard = card;
+    console.log('added second');
+    card.setState('active');
+    card.lock();
+    if (this.secondCard.letter == this.firstCard.letter) {
+      console.log('MATCH');
+      this.firstCard.setState('found');
+      this.secondCard.setState('found');
+    } else {
+      console.log('NO MATCH');
+      console.log(this.firstCard, this.secondCard);
+      // this.firstCard.setState('active');
+      // this.secondCard.setState('active');
+      var flipMoment = new Date();
+      flipMoment.setSeconds(flipMoment.getSeconds() + 3);
+      // this.firstCard.flipAt(flipMoment);
+      // this.secondCard.flipAt(flipMoment);
+      this.firstCard.setState('inactive', flipMoment);
+      this.secondCard.setState('inactive', flipMoment);
+    }
+    this.firstCard = null;
+    this.secondCard = null;
+  }
+}
 
 Game.prototype.update = function() {
   var game = this;
   setTimeout(function() {
+    var now = new Date();
     game.render();
     game.update();
-  }, 1);
+  }, 10);
 };
 
 Game.prototype.render = function() {
-  // $('#speelveld').empty();
-  // console.log('render');
-
+  for (var i = 0; i < this.board.cards.length; i++) {
+    var card = this.board.cards[i];
+    card.render();
+  }
+  // if (this.firstCard != null) {
+  //   this.firstCard.render();
+  // }
+  // if (this.secondCard != null) {
+  //   this.secondCard.render();
+  // }
 };

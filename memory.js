@@ -43,32 +43,13 @@ $(document).on('click', 'div.col', function(e) {
 });
 
 function clickHandler(boardObj) {
-  console.log(board);
   console.log("Clicked on:", boardObj);
   var card = game.board.getCard(boardObj.data('x'), boardObj.data('y'));
   console.log(card);
-
-  if (firstCard == null) {
-    firstCard = card;
-    card.setState('active');
-  } else if (firstCard != null && secondCard == null) {
-    secondCard = card;
-    card.setState('active');
-    // lets check if it is a match
-    if (firstCard.letter == secondCard.letter) {
-      console.log('MATCH');
-      firstCard.setState('found');
-      secondCard.setState('found');
-    } else {
-      console.log('NO MATCH');
-      firstCard.setState('inactive');
-      secondCard.setState('inactive');
-    }
-
-    firstCard = null;
-    secondCard = null;
-  }
-
+  // if (card.isLocked()) {
+  //   return;
+  // }
+  game.addCard(card);
 }
 
 function generateCharacters(boardSize) {
@@ -112,7 +93,7 @@ function renderBoard(b) {
       $card = $('<div />', {
         class: 'col inactive card'
       });
-      $card.css('background-color', '#' + currentGameSettings.inactiveColor);
+      $card.css('background-color', '#' + card.inactiveColor);
       $card.text(card.defaultChar);
       $card.attr('char', card.letter);
       $card.attr('data-char', card.letter);
