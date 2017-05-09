@@ -10,16 +10,32 @@
 
 <body>
   <header>
-    <h2>Javascript memory</h2>
+    <h2>MemoryJS</h2>
     <div>
-      Verlopen tijd: <span id="tijd">0</span> seconden.<br/>
-      Gevonden kaart-paren: <span id="gevonden">0</span><br>
-      Resterende toontijd: <br>
+      Playtime: <span id="tijd">0</span> seconds.<br/>
+      Found card-pairs: <span id="gevonden">0</span><br>
+      Remaining showtime: <br>
       <button id="myTime"><div id="timeLeft"></div></button><br/>
     </div>
   </header>
 
   <div id="main">
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+      <!-- Modal content -->
+      <div class="modal-content">
+        <div class="modal-header">
+          <span class="close">&times;</span>
+        </div>
+        <div id="modal-body" class="modal-body">
+          <p id="txt">...</p>
+        </div>
+        <div class="modal-footer">
+        </div>
+      </div>
+
+    </div>
   <div>
 
   <div id="speelveld">
@@ -28,10 +44,10 @@
   <table id="meta">
     <tr>
       <td>
-        <b>Top vijf</b>
+        <b>Top five</b>
         <ol id="topscores"></ol>
-        <b>Gemiddelde speeltijd:</b> <span id="gemiddeld">0s (+0s)</span><br/><br/>
-        <b>Karakter op kaarten:</b>
+        <b>Average playtime:</b> <span id="gemiddeld">0s (+0s)</span><br/><br/>
+        <b>Card back:</b>
           <select name="character" id="character">
             <option value="*">*</option>
             <option value="#">#</option>
@@ -41,7 +57,7 @@
             <option value="X">X</option>
           </select>
         <br>
-        <b>Afmeting bord:</b><select name="size" id ="size">
+        <b>Board size:</b><select name="size" id ="size">
             <option value=2>2</option>
             <option value=4>4</option>
             <option value=6 selected>6</option>
@@ -54,7 +70,7 @@
     	    	{valueElement:'valueinactive',
     	    	 styleElement:'styleInactive',
     	    	 onFineChange:'setColor(\'div.inactive\')'}">
-    	    Kaartkleur
+    	    Back
     		</button>
     		<input type="hidden" id="valueinactive" value="ff0000"><input id="styleInactive">
       	<br>
@@ -62,7 +78,7 @@
     	    	{valueElement:'valueactive',
     	    	 styleElement:'styleActive',
     	    	 onFineChange:'setColor(\'div.active\')'}">
-    	    Open
+    	    Front
     		</button>
     		<input type="hidden" id="valueactive" value="008C00"><input id="styleActive">
       	<br>
@@ -70,20 +86,22 @@
     	    	{valueElement:'valuefound',
     	    	 styleElement:'styleFound',
     	    	 onFineChange:'setColor(\'div.found\')'}">
-    	    Gevonden
+    	    Found
     		</button>
     		<input type="hidden" id="valuefound" value="800080"><input id="styleFound">
   	  </td>
     </tr>
     <tr>
       <td>
-        <button id="opnieuw">Nieuw Spel</button>
+        <button id="opnieuw">Start new game</button>
       </td>
     </tr>
   </table>
   <script type="text/javascript" src="card.js"></script>
   <script type="text/javascript" src="board.js"></script>
+  <script type="text/javascript" src="durationbar.js"></script>
   <script type="text/javascript" src="game.js"></script>
+  <script type="text/javascript" src="modal.js"></script>
   <script type="text/javascript" src="memory.js"></script>
 </body>
 </html>

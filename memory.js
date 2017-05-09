@@ -4,7 +4,7 @@ var defaultSettings = {
   foundColor: '800080',
   boardSize: 6,
   defaultChar: '*',
-  board: generateCharacters(6), // P1:1
+  board: generateCharacters(6),
   charIndex: -1,
   nextChar: function(board, charIndex) {
     var nextIndex = charIndex + 1;
@@ -12,43 +12,50 @@ var defaultSettings = {
   }
 }
 
+var started = false;
 var game = null;
 var nextGameSettings = Object.create(defaultSettings);
 var currentGameSettings = Object.create(defaultSettings);
 
-var board = null;
-var firstCard = null;
-var secondCard = null;
-
-var score = 0;
-var gameStartTime;
-var gameEndTime;
-var showTimeDefault = 3000; // seconds
-var currentShowTime = 0;
-var showTimeStart;
-
-var foundMatchingCards = 0;
-var showTimeWidth = 185;
-
-var timeLastFrame;
-
-
 $(document).ready(function() {
-// initGame(defaultSettings);
   game = new Game(defaultSettings);
 });
 
-$(document).on('click', 'div.col', function(e) {
-  clickHandler($(this));
+$(window).on('click', function(e) {
+  var target = $(e.target);
+  game.modal.hide();
+  if (target.is('div')) {
+    if (target.attr('class') == 'col') {
+      clickHandler(target);
+    }
+  }
+
+  if (target.attr('id') == 'opnieuw') {
+    started = false;
+    nextGameSettings.charIndex = -1;
+    nextGameSettings.board = generateCharacters(nextGameSettings.boardSize);
+    $('#speelveld').empty();
+    game = new Game(nextGameSettings);
+  }
+});
+
+$(window).on('change', function(e) {
+  var target = $(e.target);
+  if (target.attr('id') == 'character') {
+    nextGameSettings.defaultChar = target.val();
+  }
+
+  if (target.attr('id') == 'size') {
+    nextGameSettings.boardSize = target.val();
+  }
 });
 
 function clickHandler(boardObj) {
-  console.log("Clicked on:", boardObj);
+  if (started == false) {
+    game.start();
+    started = true;
+  }
   var card = game.board.getCard(boardObj.data('x'), boardObj.data('y'));
-  console.log(card);
-  // if (card.isLocked()) {
-  //   return;
-  // }
   game.addCard(card);
 }
 
@@ -80,42 +87,6 @@ function shuffleCharacters(characters) {
   return characters;
 }
 
-function renderBoard(b) {
-  // first delete old board so it doesnt stack
-  $('#speelveld').empty();
-
-  for (var y = 0; y < b.boardSize; y++) {
-    $row = $('<div />', {
-      class: 'row'
-    });
-    for (var x = 0; x < b.boardSize; x++) {
-      var card = b.getCard(x, y);
-      $card = $('<div />', {
-        class: 'col inactive card'
-      });
-      $card.css('background-color', '#' + card.inactiveColor);
-      $card.text(card.defaultChar);
-      $card.attr('char', card.letter);
-      $card.attr('data-char', card.letter);
-      $card.attr('data-locked', card.locked);
-      $card.attr('data-x', card.x);
-      $card.attr('data-y', card.y);
-      $card.attr('id', 'card' + x + '-' + y);
-      card.displayObj = $card;
-      $row.append($card);
-    }
-    $('#speelveld').append($row);
-  }
-}
-
-function initGame(settings) {
-  currentGameSettings = Object.create(settings);
-  consolePrintBoard(settings);
-  board = new Board();
-  board.init(defaultSettings);
-  renderBoard(board);
-}
-
 function setColor(className) {
   var color;
   if (className === 'div.inactive') {
@@ -130,15 +101,4 @@ function setColor(className) {
   } else {
     color = '000000';
   }
-}
-
-function consolePrintBoard(settings) {
-  var grid = '';
-  for (var y = 0; y < settings.boardSize; y++) {
-    for (var x = 0; x < settings.boardSize; x++) {
-      grid = grid.concat(' ' + settings.board[y * settings.boardSize + x]);
-    }
-    grid = grid.concat('\n');
-  }
-  console.log(grid);
 }
