@@ -21,7 +21,7 @@ Card.prototype.show = function() {
 
 Card.prototype.hide = function() {
   this.changeColor(this.inactiveColor);
-  this.displayChar(this.letter);//defaultChar);
+  this.displayChar(this.defaultChar);
   this.unlock();
 }
 Card.prototype.found = function() {
@@ -51,55 +51,7 @@ Card.prototype.setState = function(newState, flipMoment) {
   this.state = newState;
 };
 
-// Card.prototype.forceState = function(nextState) {
-//   this.state = nextState;
-//   this.lastState = 'active';
-// };
-//
-// Card.prototype.flip = function() {
-//   // console.log('need to flip card ', this.x, this.y, this.letter);
-//   // if (this.state == 'inactive') {
-//   //   // display backside of card
-//   //   this.changeColor(this.inactiveColor);
-//   //   this.displayChar(this.defaultChar);
-//   //   this.unlock();
-//   // } else if (this.state == 'active') {
-//   //   // display front side of card without found
-//   //   this.changeColor(this.activeColor);
-//   //   this.displayChar(this.letter);
-//   //   this.lock();
-//   // } else if (this.state == 'found') {
-//   //   // display found
-//   //   this.changeColor(this.foundColor);
-//   //   this.displayChar(this.letter);
-//   //   // lets lock it so we make sure it doesnt get clicked on again
-//   //   this.lock();
-//   // }
-// };
-// //
-// // Card.prototype.flipAt = function(moment) {
-// //   this.flipAtMoment = moment;
-// // }
-//
 Card.prototype.render = function() {}
-//   // if (this.lastState != this.state) {
-//   //   // console.log(this.lastState, this.state);
-//   //   // we have a transition going on
-//   //   if (this.lastState == 'inactive' && this.state == 'active') {
-//   //     // transition from inactive to active
-//   //     this.flip();
-//   //     this.lastState = 'active'; // lets make sure we dont continue to flip through the states
-//   //   }
-//   //   if (this.lastState == 'active' && this.state == 'inactive') {
-//   //     this.flip();
-//   //     this.lastState = 'inactive';
-//   //   }
-//   //   if (this.lastState == 'active' && this.state == 'found') {
-//   //     this.flip();
-//   //     this.lastState = 'found';
-//   //   }
-//   // }
-// }
 
 Card.prototype.changeColor = function(color) {
   $(this.displayObj).css('background-color', '#' + color);

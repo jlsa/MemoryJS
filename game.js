@@ -2,28 +2,19 @@ function Game(settings) {
   this.init;
   this.board;
   this.settings = settings;
-  this.init();
   this.firstCard;
   this.secondCard;
   this.durationBar;
-
   this.foundPairs = 0;
-
   this.startTime;
   this.endTime;
-  this.defaultShowTime = 3000;
-  this.lastClickTime;
-  this.showCards = false;
-  this.endTimeShowCards = null;
+  this.elapsedTime = -1;
   this.modal;
+  this.init();
 }
 
-Game.prototype.newGame = function(settings) {
-  // generate all
-};
-
 Game.prototype.init = function() {
-  console.log('Game INIT');
+  // console.log('Game INIT');
   this.modal = new Modal();
   this.board = new Board();
   this.board.init(this.settings);
@@ -45,14 +36,21 @@ Game.prototype.init = function() {
     }
     $('#speelveld').append($row);
   }
+  // console.log(this.foundPairs);
+  this.foundPairs = 0;
+  this.elapsedTime = 0;
+  this.startTime = null;
+  this.endTime = null;
 
+  $('#tijd').text(0);
+  $('#gevonden').text(0);
   this.durationBar = new DurationBar();
+
   this.update();
 };
 
 Game.prototype.start = function() {
   this.startTime = new Date();
-  // this.modal.show('started the game');
 }
 
 Game.prototype.addCard = function(card) {
@@ -91,7 +89,7 @@ Game.prototype.addCard = function(card) {
       var maxMatches = (this.board.boardSize * this.board.boardSize) / 2;
       if (this.foundPairs == maxMatches) {
         this.endTime = new Date();
-        this.modal.show('Gefeliciteerd je hebt alle paren gevonden in ' + Math.floor((this.endTime - this.startTime) / 1000) + ' seconds');
+        this.modal.show('Congratz you matched all cards in ' + Math.floor((this.endTime - this.startTime) / 1000) + ' seconds');
       }
     } else {
       // dont do anything here
@@ -104,11 +102,10 @@ Game.prototype.update = function() {
   setTimeout(function() {
     game.render();
     game.durationBar.update();
-    // console.log(game.durationBar.width);
     game.updateBoard();
     game.updatePlayTime();
     game.updateFoundPairs();
-    game.update();
+    game.update(); // recursive call
   }, 10);
 };
 
@@ -130,6 +127,7 @@ Game.prototype.updateBoard = function() {
 }
 
 Game.prototype.updateFoundPairs = function() {
+  // console.log(this.foundPairs);
   $('#gevonden').text(this.foundPairs);
 }
 
@@ -140,6 +138,7 @@ Game.prototype.updatePlayTime = function() {
     elapsedTime = Math.floor((now - this.startTime) / 1000);
   } else if (this.startTime != null && this.endTime != null) {
     elapsedTime = Math.floor((this.endTime - this.startTime) / 1000);
+    this.elapsedTime = elapsedTime;
   }
   $('#tijd').text(elapsedTime);
 }

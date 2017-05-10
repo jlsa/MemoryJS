@@ -17,13 +17,27 @@ var game = null;
 var nextGameSettings = Object.create(defaultSettings);
 var currentGameSettings = Object.create(defaultSettings);
 
+var playedGames = [];
+
 $(document).ready(function() {
   game = new Game(defaultSettings);
 });
 
 $(window).on('click', function(e) {
   var target = $(e.target);
-  game.modal.hide();
+  // console.log(target);
+
+  if (target.is('span')) {
+    if (target.attr('class') == 'close') {
+      game.modal.hide();
+    }
+  }
+
+  if (target.is('div')) {
+    if (target.attr('id') == 'myModal') {
+      game.modal.hide();
+    }
+  }
   if (target.is('div')) {
     if (target.attr('class') == 'col') {
       clickHandler(target);
@@ -31,6 +45,8 @@ $(window).on('click', function(e) {
   }
 
   if (target.attr('id') == 'opnieuw') {
+    game.startTime = null;
+    game.endTime = null;
     started = false;
     nextGameSettings.charIndex = -1;
     nextGameSettings.board = generateCharacters(nextGameSettings.boardSize);
@@ -48,7 +64,30 @@ $(window).on('change', function(e) {
   if (target.attr('id') == 'size') {
     nextGameSettings.boardSize = target.val();
   }
+
+  if (target.attr('id') == 'username') {
+    // console.log('username: ' + target.val());
+    // console.log('playtime: ' + (game.elapsedTime));
+    var playedGame = {
+      username: target.val(),
+      playtime: game.elapsedTime
+    }
+    playedGames[playedGames.length] = playedGame;
+
+    updateStatistics();
+    game.modal.hide();
+  }
 });
+
+function updateStatistics() {
+  // sort so that the players with the shortest playtime are on top.
+  $('#topscores').empty();
+  // console.log(playedGames);
+  for (var i = 0; i < playedGames.length; i++) {
+    var playedGame = playedGames[i];
+    $('#topscores').append('<li>' + playedGame.username + '</li>');
+  }
+}
 
 function clickHandler(boardObj) {
   if (started == false) {
